@@ -1,12 +1,7 @@
-# Not (currently) maintained
 
-> I'm taking some time off OSS, and focusing on commercial projects. It's unlikely I'll be making any changes to ReactQL anytime soon, so please know that before basing your next project off of any code you find here.
->
-> That's not to say that I'll _never_ update it, just that it's not currently on my radar. Feel free to fork and extend. Enjoy!
 
-<img src="https://reactql.org/reactql/logo.svg" alt="ReactQL" width="278" height="77" />
 
-![Travis](https://api.travis-ci.org/reactql/kit.svg?branch=master) ![npm](https://img.shields.io/npm/dt/reactql.svg?style=flat-square) ![license](https://img.shields.io/github/license/reactql/kit.svg?style=flat-square) [![Twitter Follow](https://img.shields.io/twitter/follow/reactql.svg?style=social&label=Follow)](https://twitter.com/reactql)
+![Travis](https://api.travis-ci.org/reactql/kit.svg?branch=master) ![npm](https://img.shields.io/npm/dt/reactql.svg?style=flat-square) ![license](https://img.shields.io/github/license/reactql/kit.svg?style=flat-square)
 
 # New in 2.x: Full-stack GraphQL + React v16 streaming API + SSL
 
@@ -71,7 +66,7 @@ Want to install quickly? Use the [CLI](https://github.com/reactql/cli) - it does
 
 ### Highly configurable
 
-- New in 2.x: Userland configuration.  No need to edit kit code; simply use the built-in `Config` singleton
+- No need to edit kit code; simply use the built-in `Config` singleton
 - Add a GraphQL server with one line of code
 - Add GET|POST|PUT|PATCH|DELETE routes - auto-injected with Koa context and the per-request Redux store
 - Add a custom 404 handler
