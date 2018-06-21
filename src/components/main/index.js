@@ -58,10 +58,6 @@ import Styles from 'components/styles';
 // Styles
 import css from './main.scss';
 
-// Get the ReactQL logo.  This is a local .svg file, which will be made
-// available as a string relative to [root]/dist/assets/img/
-import logo from './reactql-logo.svg';
-
 // ----------------------
 
 // Example function to show that the `history` object can be changed from

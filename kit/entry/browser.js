@@ -28,10 +28,10 @@ import { ApolloProvider } from 'react-apollo';
 /* ReactQL */
 
 // Root component.  This is our 'entrypoint' into the app.  If you're using
-// the ReactQL starter kit for the first time, `src/app.js` is where
-// you can start editing to add your own code.  Note:  This first is imported
+// the PreQL starter kit for the first time, `src/app.js` is where
+// you can start editing to add your own code.  Note:  This file is imported
 // first, since it sets up our app's settings
-import App from 'src/app';
+import App from 'app';
 
 // Get the custom `history` that we'll use to feed down to our `<Router>`
 import { history } from 'kit/lib/routing';

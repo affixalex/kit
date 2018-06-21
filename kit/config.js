@@ -264,5 +264,5 @@ if (SERVER) {
 
 // Since there's only one `Config` instance globally, we'll create the new
 // instance here and export it.  This will then provide any subsequent imports
-// with the same object, so we can add settings to a common config
+// with the same object, so we can add settings to a common config.
 export default new Config();

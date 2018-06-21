@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 /* ReactQL */
 
 // NotFound 404 handler for unknown routes
-import { NotFound } from 'kit/lib/routing';
+import { NotFound } from '../../kit/lib/routing';
 
 // ----------------------
 

@@ -20,7 +20,7 @@ import { graphql } from 'react-apollo';
 // GraphQL queries.  Looking at this file demonstrates how to import fragments.
 // Webpack will compile this into inline GraphQL for us, so we can pass the
 // query to components using the @graphql decorator
-import allMessages from 'src/graphql/queries/all_messages.gql';
+import allMessages from '../graphql/queries/all_messages.gql';
 
 // ----------------------
 
