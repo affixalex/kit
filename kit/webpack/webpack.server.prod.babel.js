@@ -13,7 +13,6 @@ export default new WebpackConfig().extend({}, PATHS.root + '/kit/webpack/webpack
     path.join(process.cwd(), 'kit/entry/browser.js')
   ],
 
-  // Utilize long-term caching by adding content hashes (not compilation hashes) to compiled assets
   output: {
     filename: 'server.js',
   },

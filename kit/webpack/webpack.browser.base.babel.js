@@ -27,10 +27,24 @@ export default new WebpackConfig().merge({
         loader: 'graphql-tag/loader',
       },
       {
-        test: /\.js$/, // Transform all .js files required somewhere with Babel
+        test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
+        loader: 'babel-loader',
+        query: {
+          presets: [
+            'react',
+          ],
+          plugins: [
+            "transform-class-properties",
+            "transform-decorators-legacy",
+            "transform-object-rest-spread",
+            "dynamic-import-node",
+            "graphql-tag",
+            "import-graphql",
+            "transform-react-remove-prop-types",
+            "transform-react-constant-elements",
+            "transform-react-inline-elements"
+          ],
         },
       },
       {

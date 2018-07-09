@@ -3,6 +3,8 @@
  * COMMON WEBPACK CONFIGURATION
  */
 // Webpack 4 is our bundler of choice.
+// Note that we're using require and not import here. 
+// This is intensely idiosyncratic. Just... whatever.
 const webpack = require('webpack').default;
 // We'll use `webpack-config` to create a 'base' config that can be
 // merged/extended from for further configs
