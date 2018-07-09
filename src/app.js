@@ -141,8 +141,8 @@ if (SERVER) {
   config.setErrorHandler((e, ctx /* `next` is unused in this example */) => {
     // Mimic the default behaviour with an overriden message, so we know it's
     // working
-    // eslint-disable-next-line no-console
     const util = require('util');
+    // eslint-disable-next-line no-console
     console.log('Custom error: ', util.inspect(e));
     ctx.body = 'Some kind of error. Check your source code.';
   });

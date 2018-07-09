@@ -51,7 +51,6 @@ import { Redirect, history } from 'kit/lib/routing';
 // multiple components per file where it makes sense to do so
 import GraphQLMessage from 'components/graphql';
 import { Home, Page, WhenNotFound } from 'components/routes';
-import ReduxCounter from 'components/redux';
 import Stats from 'components/stats';
 
 // Styles
