@@ -12,7 +12,8 @@ import { getServerURL } from 'kit/lib/env';
 // passed options alongside any set by `config.setApolloClientOptions`
 export function createClient(cache, opt = {}) {
   return new ApolloClient(Object.assign({
-    link: createHttpLink({ uri: "/graphql" }),
+    // FIXME
+    link: createHttpLink({ uri: "http://localhost:8081/graphql" }),
     cache
   }, config.apolloClientOptions, opt));
 }

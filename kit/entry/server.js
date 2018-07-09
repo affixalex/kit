@@ -50,6 +50,7 @@ import Helmet from 'react-helmet';
 import { graphqlKoa, graphiqlKoa } from 'apollo-server-koa';
 // Import the redux cache for Apollo
 import { ReduxCache, apolloReducer } from 'apollo-cache-redux';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 // Allow local GraphQL schema querying when using a built-in GraphQL server
 import apolloLocalQuery from 'apollo-local-query';
 // Import all of the GraphQL lib, for use with our Apollo client connection
@@ -266,7 +267,8 @@ app.use(async (ctx, next) => {
   }
   // Create a new Apollo cache
   if (!ctx.cache) {
-    ctx.cache = new ReduxCache(ctx.store);
+    ctx.cache = new InMemoryCache();
+    //new ReduxCache(ctx.store);
   }
   // Create a new server Apollo client for this request, if we don't already
   // have one
