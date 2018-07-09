@@ -86,6 +86,7 @@ module.exports = new WebpackConfig().merge({
           plugins: [
             "transform-class-properties",
             "transform-decorators-legacy",
+            "transform-object-rest-spread",
             "dynamic-import-node",
             "graphql-tag",
             "import-graphql",

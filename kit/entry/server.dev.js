@@ -15,7 +15,7 @@ import server, { createReactHandler, staticMiddleware } from './server';
 import webpack from 'webpack';
 const config = require('../webpack/webpack.server.dev.babel.js');
 //const compiler = webpack(config);
-const koaWebpack = require('koa-webpack');
+//const koaWebpack = require('koa-webpack');
 
 // ----------------------
 
@@ -30,9 +30,7 @@ const scripts = ['vendor.js', 'browser.js'];
 //  const compile = webpack(devConfig)
 
   // Create proxy to tunnel requests to the browser `webpack-dev-server`
-  console.log("BREAKAGE");
   router.get('/*', createReactHandler([] /* css */, scripts));
-  console.log("STILL HERE");
 //  koaWebpack({ compiler }).then((middleware) => {
 //    app.use(middleware);
 //  });
