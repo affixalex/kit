@@ -1,25 +1,25 @@
+"use strict";
 /**
  * COMMON WEBPACK CONFIGURATION
  */
-
-const path = require('path');
-const webpack = require('webpack');
-
-
+// Webpack 4 is our bundler of choice.
+import webpack from 'webpack';
+// We'll use `webpack-config` to create a 'base' config that can be
+// merged/extended from for further configs
+import WebpackConfig from 'webpack-config';
+import path from 'path';
 // Our local path configuration, so webpack knows where everything is/goes.
 // Since we haven't yet established our module resolution paths, we have to
 // use the full relative path
-const PATHS = require('../../config/paths');
-
+import PATHS from '../../config/paths';
+// Disable deprecation warnings.
 process.noDeprecation = true;
 
-module.exports = (options) => ({
-  mode: options.mode,
-  entry: options.entry,
-  output: Object.assign({ // Compile into js/build.js
+export default new WebpackConfig().merge({
+  output: Object.assign({ // Compile into 'dist'
     path: path.resolve(process.cwd(), 'dist'),
     publicPath: '/',
-  }, options.output), // Merge with env dependent settings
+  }), // Merge with env dependent settings
   module: {
     rules: [
       {
@@ -32,7 +32,6 @@ module.exports = (options) => ({
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: options.babelQuery,
         },
       },
       {
@@ -101,7 +100,6 @@ module.exports = (options) => ({
       // make fetch available
       fetch: 'exports-loader?self.fetch!whatwg-fetch'
     }),
-
     // Always expose NODE_ENV to webpack, in order to use `process.env.NODE_ENV`
     // inside your code for any environment checks; UglifyJS will automatically
     // drop any unreachable code.
@@ -125,14 +123,18 @@ module.exports = (options) => ({
       'main'
     ]
   },
-  devtool: options.devtool,
-  target: 'web', // Make web variables accessible to webpack, e.g. window
-  performance: options.performance || {},
   optimization: {
     namedModules: true,
     splitChunks: {
-      name: 'vendor',
-      minChunks: 2
+      minChunks: 2,
+      cacheGroups: {
+        commons: { 
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          chunks: "initial",
+          enforce: true
+        }
+      }
     }
   }
 });

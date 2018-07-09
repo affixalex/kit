@@ -12,20 +12,12 @@
 
 // ----------------------
 // IMPORTS
-
-/* PreQL */
-
-// Config API, for adding reducers and configuring our ReactQL app
+// Config API, for adding reducers and configuring our PreQL app
 import config from '../kit/config';
-
-/* App */
-
 // Example counter reducer.  This simply increments the counter by +1
 import counterReducer from './reducers/counter';
-
 // Main component -- i.e. the 'root' React component in our app
 import Main from './components/main';
-
 // Init global styles.  These will be added to the resulting CSS automatically
 // without any class hashing.  Use this to include default or framework CSS.
 import './styles.global.scss';
@@ -150,7 +142,8 @@ if (SERVER) {
     // Mimic the default behaviour with an overriden message, so we know it's
     // working
     // eslint-disable-next-line no-console
-    console.log('Custom error: ', e.message);
+    const util = require('util');
+    console.log('Custom error: ', util.inspect(e));
     ctx.body = 'Some kind of error. Check your source code.';
   });
 

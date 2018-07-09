@@ -1,28 +1,20 @@
+"use strict";
 /* eslint-disable no-console */
 
-// Production server entry point.  Spawns the server on default HOST:PORT
+// Development server entry point.  Spawns the server on default HOST:PORT
 
 // ----------------------
 // IMPORTS
 
-/* NPM */
-
 // Chalk terminal library
 import chalk from 'chalk';
-
-/* Local */
-
 // Import console messages
 import { logServerStarted } from 'kit/lib/console';
-
 // Extend the server base
 import server, { createReactHandler, staticMiddleware } from './server';
-
-import webpack from 'webpack'
-import { devMiddleware, hotMiddleware } from 'koa-webpack-middleware'
-import devConfig from '../webpack.browser.dev'
-const config = require('../webpack/webpack.server.dev.js');
-const compiler = Webpack(config);
+import webpack from 'webpack';
+const config = require('../webpack/webpack.server.dev.babel.js');
+//const compiler = webpack(config);
 const koaWebpack = require('koa-webpack');
 
 // ----------------------
@@ -35,14 +27,15 @@ const scripts = ['vendor.js', 'browser.js'];
 // Runs inside an immediate `async` block, to await listening on ports
 (async () => {
   const { app, router, listen } = server;
-  const compile = webpack(devConfig)
+//  const compile = webpack(devConfig)
 
   // Create proxy to tunnel requests to the browser `webpack-dev-server`
-  router.get('/*', createReactHandler(css, scripts));
-  
-  koaWebpack({ compiler }).then((middleware) => {
-    app.use(middleware);
-  });
+  console.log("BREAKAGE");
+  router.get('/*', createReactHandler([] /* css */, scripts));
+  console.log("STILL HERE");
+//  koaWebpack({ compiler }).then((middleware) => {
+//    app.use(middleware);
+//  });
 
   console.log("starting");
 

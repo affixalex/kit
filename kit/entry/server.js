@@ -7,94 +7,67 @@
 // ----------------------
 // IMPORTS
 
-/* Node */
-
 // For pre-pending a `<!DOCTYPE html>` stream to the server response
 import { PassThrough } from 'stream';
-
 // HTTP & SSL servers.  We can use `config.enableSSL|disableHTTP()` to enable
 // HTTPS and disable plain HTTP respectively, so we'll use Node's core libs
 // for building both server types.
 import http from 'http';
 import https from 'https';
-
-/* NPM */
-
 // Patch global.`fetch` so that Apollo calls to GraphQL work
 import 'isomorphic-fetch';
-
 // React UI
 import React from 'react';
-
 // React utility to transform JSX to HTML (to send back to the client)
 import ReactDOMServer from 'react-dom/server';
-
 // Koa 2 web server.  Handles incoming HTTP requests, and will serve back
 // the React render, or any of the static assets being compiled
 import Koa from 'koa';
-
 // Apollo tools to connect to a GraphQL server.  We'll grab the
 // `ApolloProvider` HOC component, which will inject any 'listening' React
 // components with GraphQL data props.  We'll also use `getDataFromTree`
 // to await data being ready before rendering back HTML to the client
 import { ApolloProvider, getDataFromTree } from 'react-apollo';
-
 // Enforce SSL, if required
 import koaSSL from 'koa-sslify';
-
 // Enable cross-origin requests
 import koaCors from 'kcors';
-
 // Static file handler
 import koaSend from 'koa-send';
-
 // HTTP header hardening
 import koaHelmet from 'koa-helmet';
-
 // Koa Router, for handling URL requests
 import KoaRouter from 'koa-router';
-
 // High-precision timing, so we can debug response time to serve a request
 import ms from 'microseconds';
-
 // React Router HOC for figuring out the exact React hierarchy to display
 // based on the URL
 import { StaticRouter } from 'react-router';
-
 // <Helmet> component for retrieving <head> section, so we can set page
 // title, meta info, etc along with the initial HTML
 import Helmet from 'react-helmet';
-
 // Import the Apollo GraphQL server, for Koa
 import { graphqlKoa, graphiqlKoa } from 'apollo-server-koa';
-
+// Import the redux cache for Apollo
+import { ReduxCache, apolloReducer } from 'apollo-cache-redux';
 // Allow local GraphQL schema querying when using a built-in GraphQL server
 import apolloLocalQuery from 'apollo-local-query';
-
 // Import all of the GraphQL lib, for use with our Apollo client connection
 import * as graphql from 'graphql';
-
-/* ReactQL */
-
 // App entry point.  This must come first, because app.js will set-up the
 // server config that we'll use later
 import App from 'src/app';
-
 // Custom redux store creator.  This will allow us to create a store 'outside'
 // of Apollo, so we can apply our own reducers and make use of the Redux dev
 // tools in the browser
 import createNewStore from 'kit/lib/redux';
-
 // Initial view to send back HTML render
 import Html from 'kit/views/ssr';
-
 // Grab the shared Apollo Client / network interface instantiation
 import { getNetworkInterface, createClient } from 'kit/lib/apollo';
-
 // App settings, which we'll use to customise the server -- must be loaded
 // *after* app.js has been called, so the correct settings have been set
 import config from 'kit/config';
-
 // Import paths.  We'll use this to figure out where our public folder is
 // so we can serve static files
 import PATHS from 'config/paths';
@@ -173,10 +146,8 @@ export function createReactHandler(css = [], scripts = [], chunkManifest = {}) {
     if ([301, 302].includes(routeContext.status)) {
       // 301 = permanent redirect, 302 = temporary
       ctx.status = routeContext.status;
-
       // Issue the new `Location:` header
       ctx.redirect(routeContext.url);
-
       // Return early -- no need to set a response body
       return;
     }
@@ -186,27 +157,23 @@ export function createReactHandler(css = [], scripts = [], chunkManifest = {}) {
       // By default, just set the status code to 404.  Or, we can use
       // `config.set404Handler()` to pass in a custom handler func that takes
       // the `ctx` and store
-
       if (config.handler404) {
         config.handler404(ctx);
-
         // Return early -- no need to set a response body, because that should
         // be taken care of by the custom 404 handler
         return;
       }
-
       ctx.status = routeContext.status;
     }
 
     // Create a HTML stream, to send back to the browser
     const htmlStream = new PassThrough();
-
     // Prefix the doctype, so the browser knows to expect HTML5
     htmlStream.write('<!DOCTYPE html>');
-
     // Create a stream of the React render. We'll pass in the
     // Helmet component to generate the <head> tag, as well as our Redux
     // store state so that the browser can continue from the server
+    // FIXME: Add css
     const reactStream = ReactDOMServer.renderToNodeStream(
       <Html
         helmet={Helmet.renderStatic()}
@@ -214,7 +181,6 @@ export function createReactHandler(css = [], scripts = [], chunkManifest = {}) {
           webpackManifest: chunkManifest,
           __STATE__: ctx.store.getState(),
         }}
-        css={css}
         scripts={scripts}>
         {components}
       </Html>,
@@ -280,7 +246,7 @@ if (config.enableTiming) {
 }
 
 // Middleware to set the per-request environment, including the Apollo client.
-// These can be overriden/added to in userland with `config.addBeforeMiddleware()`
+// These can be overriden/added to with `config.addBeforeMiddleware()`
 app.use(async (ctx, next) => {
   ctx.apollo = {};
   return next();
@@ -294,10 +260,18 @@ config.beforeMiddleware.forEach(middlewareFunc => app.use(middlewareFunc));
 // stored on the `ctx` object, making it available for the React handler or
 // any subsequent route/middleware
 app.use(async (ctx, next) => {
+  // Create a new Redux store for this request, if we don't have one
+  if (!ctx.store) {
+    ctx.store = createNewStore();
+  }
+  // Create a new Apollo cache
+  if (!ctx.cache) {
+    ctx.cache = new ReduxCache(ctx.store);
+  }
   // Create a new server Apollo client for this request, if we don't already
   // have one
   if (!ctx.apollo.client) {
-    ctx.apollo.client = createClient({
+    ctx.apollo.client = createClient(ctx.cache, {
       ssrMode: true,
       // Create a network request.  If we're running an internal server, this
       // will be a function that accepts the request's context, to feed through
@@ -306,12 +280,6 @@ app.use(async (ctx, next) => {
       ...ctx.apollo.options,
     });
   }
-
-  // Create a new Redux store for this request, if we don't have one
-  if (!ctx.store) {
-    ctx.store = createNewStore(ctx.apollo.client);
-  }
-
   // Pass to the next middleware in the chain: React, custom middleware, etc
   return next();
 });
