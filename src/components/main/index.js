@@ -70,7 +70,6 @@ export default () => (
     <Helmet>
       <title>PreQL application</title>
       <meta name="description" content="PreQL starter kit app" />
-      {/* <base href="http://localhost:8081/" /> */}
     </Helmet>
     <div className="test">
     </div>
