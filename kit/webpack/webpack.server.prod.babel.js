@@ -1,10 +1,12 @@
 /* eslint import/no-extraneous-dependencies: ["error", {"devDependencies": true}] */
 // Important modules this config uses
-const path = require('path');
+import path from 'path';
+import PATHS from '../../config/paths';
 // const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import WebpackConfig from 'webpack-config';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-module.exports = require('./webpack.base.babel')({
+export default new WebpackConfig().extend({}, PATHS.root + '/kit/webpack/webpack.server.base.babel.js').merge({
   mode: 'production',
   // In production, we skip all hot-reloading stuff
   entry: [
@@ -13,8 +15,7 @@ module.exports = require('./webpack.base.babel')({
 
   // Utilize long-term caching by adding content hashes (not compilation hashes) to compiled assets
   output: {
-    filename: '[name].[chunkhash].js',
-    chunkFilename: '[name].[chunkhash].chunk.js'
+    filename: 'server.js',
   },
 
   performance: {
