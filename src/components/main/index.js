@@ -81,7 +81,6 @@ export default () => (
       <li><Link to="/page/about">About</Link></li>
       <li><Link to="/page/contact">Contact</Link></li>
     </ul>
-    Change routes anywhere &mdash; <button onClick={changeRoute}>Like here (About)</button>
     <hr />
     <Switch>
       <Route exact path="/" component={Home} />
